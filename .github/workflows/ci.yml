@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 env:
   CARGO_TERM_COLOR: always
 
@@ -46,14 +49,15 @@ jobs:
         if: matrix.target == 'x86_64-unknown-linux-musl'
         run: sudo apt-get update && sudo apt-get install -y musl-tools
       - run: cargo build --release --target ${{ matrix.target }}
-      - name: Package binary
+      - name: Upload binary to release
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
             cp target/${{ matrix.target }}/release/basic-to-text.exe basic-to-text-${{ matrix.target }}.exe
+            gh release upload ${{ github.ref_name }} basic-to-text-${{ matrix.target }}.exe --clobber
           else
             cp target/${{ matrix.target }}/release/basic-to-text basic-to-text-${{ matrix.target }}
+            gh release upload ${{ github.ref_name }} basic-to-text-${{ matrix.target }} --clobber
           fi
-      - uses: softprops/action-gh-release@v2
-        with:
-          files: basic-to-text-${{ matrix.target }}*
