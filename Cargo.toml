@@ -1,0 +1,11 @@
+[package]
+name = "basic-to-text"
+version = "0.1.0"
+edition = "2024"
+description = "Detokenise BBC BASIC (2 and V) files to text"
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+thiserror = "2"
