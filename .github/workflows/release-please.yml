@@ -16,6 +16,8 @@ jobs:
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: googleapis/release-please-action@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         id: release
 
   build-release:
@@ -36,7 +38,7 @@ jobs:
     env:
       CARGO_TERM_COLOR: always
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
